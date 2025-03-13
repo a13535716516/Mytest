@@ -1,0 +1,73 @@
+# 克隆仓库
+git clone --filter=blob:none --no-checkout https://github.com/libnoname/noname.git
+cd noname
+
+删除本地git仓库
+rd /s /q .git
+git init
+
+# 启用稀疏检出
+git config core.sparseCheckout true
+
+# 指定 card 文件夹
+echo "card/" >> .git/info/sparse-checkout
+
+# 切换到 PR-Branch 分支并检出文件
+git switch PR-Branch
+
+# 查看结果
+ls card/
+git pull origin PR-Branch
+更改地址
+git remote -v
+git remote set-url origin https://github.com.cnpmjs.org/libnoname/noname.git
+git pull origin PR-Branch  # 替换为你的分支名
+镜像地址通常为只读，如需推送仍需切回原地址：
+git remote set-url --push origin https://github.com/libnoname/noname.git
+
+. 清理 Git 缓存
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+
+git clone --depth 1 --branch PR-Branch https://githubfast.com/libnoname/noname.git
+
+临时查看、测试或审查某个 PR：
+git fetch origin pull/<PR-ID>/head:<BRANCH-NAME>
+
+
+更新 PR 分支
+
+如果远程分支有更新，可以拉取最新更改：
+bash
+复制
+
+git pull --depth 1 origin PR-Branch
+
+删除本地 PR 分支
+bash
+复制
+
+git branch -d PR-Branch
+
+查看分支差异
+
+比较 PR-Branch 与 main 分支的差异：
+bash
+复制
+
+git diff main..PR-Branch
+
+删除特定远程跟踪分支
+git branch -d -r origin/PR-Branch
+    参数说明：
+
+        -d：删除分支（需分支已合并）。
+
+        -r：操作远程跟踪分支。
+
+        origin/PR-Branch：目标分支名称
+
+清理所有过时的远程跟踪分支
+git remote prune origin
+    作用：
+        删除本地仓库中已不存在的远程分支引用。
